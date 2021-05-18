@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/index.css') }}">
+<title>Drone Delivery</title>
+{% endblock %}
+
+{% block body %}
+<div class="container text-center mt-5 main">
+    <div class='row m-3'>
+        <h1>Welcome to Drone Delivery!</h1>
+    </div>
+    <div class='row m-3 g-3 buttons'>
+        <div class="col-sm-5">
+            <a href="/login" class="btn btn-primary btn-lg btn-block button" type="button">Log in</a>
+        </div>
+        <div class="col-sm-5">
+            <a href="/register" class="btn btn-primary btn-lg btn-block button" type="submit">Register</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

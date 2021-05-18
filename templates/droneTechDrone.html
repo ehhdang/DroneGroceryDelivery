@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+
+{% block head %}
+<title>Drone Technician Orders</title>
+{% endblock %}
+
+{% block body %}
+<nav class="navbar navbar-light bg-light">
+    <div class="container">
+      <a type="button" class="btn btn-block btn-success" href="{{ url_for('logout') }}">Logout</a>
+    </div>
+</nav>
+<div class="container text-center my-5">
+    <div class="row my-3">
+        <h1>My Assigned Drones</h1>
+    </div>
+    <form action="/droneTechAssignedDrone" method="POST">
+        <div class="row my-4">
+            <div class="col-sm-2"></div>
+            <label for="droneID" class="col-sm-1 col-form-label">Drone ID</label>
+            <div class="col-sm-3">
+                <input name="droneID" id="droneID" type="numeric" pattern="[0-9\s]{0,}" class="form-control">
+            </div>
+            <label for="status" class="col-sm-1 col-form-label">Status</label>
+            <div class="col-sm-3">
+                <select name="status" class="form-select">
+                    <option value="empty">All</option>
+                    <option value="Available">Available</option>
+                    <option value="Busy">Busy</option>
+                </select>
+            </div>
+            <div class="col-sm-2"></div>
+        </div>
+        <div class="row my-3">
+            <table class="table table-primary table-striped ms-5 mt-3">
+                <thead>
+                    <tr>
+                        <th scope="col">Drone ID
+                            <button type="button" class="btn" onclick="sortByDroneID()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5zm-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5z"/>
+                                </svg>
+                            </button>
+                        </th>
+                        <th scope="col">Status
+                            <button type="button" class="btn" onclick="sortByStatus()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5zm-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5z"/>
+                                </svg>
+                            </button>
+                        </th>
+                        <th scope="col">Radius
+                            <button type="button" class="btn" onclick="sortByRadius()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5zm-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5z"/>
+                                </svg>
+                            </button>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody name="tableBody">
+                    {% for drone in drones %}
+                    <tr>
+                        <td>{{  drone[0] }}</td>
+                        <td>{{  drone[1] }}</td>
+                        <td>{{  drone[2] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="d-flex justify-content-evenly my-4">
+            <a href="{{url_for('dronetech')}}" type="button" class="btn btn-block btn-lg btn-secondary">Back</a>
+            <a href="{{url_for('dronetech_view_assigned_drones')}}" type="reset" class="btn btn-block btn-lg btn-primary">Reset</a>
+            <button type="submit" class="btn btn-block btn-lg btn-primary">Filter</a>
+        </div>
+    </form>
+</div>
+
+<script>
+    var states=[0,0,0];
+    var data=eval(JSON.parse('{{ states | tojson }}'));
+    function sortByDroneID() {
+        var drones;
+        if (states[0]==0) {
+            drones=data[0];
+            states[0]=1;
+        }else{
+            drones=data[1];
+            states[0]=0;
+        }
+        clearTable();
+        var tBody=document.querySelector("tbody[name='tableBody']");
+        for (var i=0;i<drones.length;i++) {
+            tBody.appendChild(createRow(drones[i]));
+        }
+    }
+    function sortByStatus() {
+        var drones;
+        if (states[1]==0) {
+            drones=data[2];
+            states[1]=1;
+        }else{
+            drones=data[3];
+            states[1]=0;
+        }
+        clearTable();
+        var tBody=document.querySelector("tbody[name='tableBody']");
+        for (var i=0;i<drones.length;i++) {
+            tBody.appendChild(createRow(drones[i]));
+        }
+    }
+    function sortByRadius() {
+        var drones;
+        if (states[2]==0) {
+            drones=data[4];
+            states[2]=1;
+        }else{
+            drones=data[5];
+            states[2]=0;
+        }
+        clearTable();
+        var tBody=document.querySelector("tbody[name='tableBody']");
+        for (var i=0;i<drones.length;i++) {
+            tBody.appendChild(createRow(drones[i]));
+        }
+    }
+    function clearTable() {
+        var tBody=document.querySelector("tbody[name='tableBody']");
+        while (tBody.firstChild) {
+            tBody.removeChild(tBody.firstChild);
+        }
+    }
+    function createRow(drone) {
+        var row=document.createElement('tr');
+        for (var i=0;i<drone.length;i++) {
+            row.appendChild(createCell(drone[i]));
+        }
+        return row;
+    }
+    function createCell(data) {
+        var cell=document.createElement("td");
+        cell.textContent=data;
+        return cell;
+    }
+</script>
+{% endblock %}

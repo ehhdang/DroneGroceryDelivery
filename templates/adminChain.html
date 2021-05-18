@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/admin.css') }}">
+<title>Admin Chain</title>
+{% endblock %}
+
+{% block body %}
+<nav class="navbar navbar-light bg-light">
+    <div class="container">
+      <a type="button" class="btn btn-block btn-success" href="{{ url_for('logout') }}">Logout</a>
+    </div>
+</nav>
+<div class="container text-center m-5">
+    <div class="row m-4">
+        <h1>Admin Create Grocery Chain</h1>
+    </div>
+    {% if message %}
+    <div class="alert alert-danger text-center mb-5" role="alert">
+      {{ message }}
+    </div>
+    {% endif %}
+    <form action="/adminChain" method="POST"> 
+        <div class="row m-3 g-3 row-size">
+            <label for="chainName" class="col-sm-3 col-form-label">Grocery Chain Name</label>
+            <div class="col-sm-9">
+                <input type="text" id="chainName" name="chainName" class="form-control">
+            </div>
+        </div>
+        <div class="m-3 d-flex justify-content-evenly">
+            <a href="{{ url_for('admin') }}" type="button" class="btn btn-lg btn-secondary button">Back</a>
+            <button type="submit" class="btn btn-lg btn-primary button">Create</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

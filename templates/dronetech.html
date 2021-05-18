@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block head %}
+<title>Drone Technician Home</title>
+{% endblock %}
+
+{% block body %}
+<nav class="navbar navbar-light bg-light">
+    <div class="container">
+      <a type="button" class="btn btn-block btn-success" href="{{ url_for('logout') }}">Logout</a>
+    </div>
+</nav>
+<div class="container text-center my-5">
+    <div class="row m-4">
+        <h1>Drone Technician Home</h1>
+    </div>
+    <div class="d-flex justify-content-evenly">
+        <a href="{{ url_for('dronetech_view_store_order') }}" type="button" class="btn btn-primary btn-block btn-lg" type="button" id="viewStoreOrderBtn">View Store Orders</a>
+        <a href="{{ url_for('dronetech_view_assigned_drones') }}" type="button" class="btn btn-primary btn-block btn-lg" type="button" id="trackDroneBtn">Track Drone Delivery</a>
+    </div>
+</div>
+{% endblock %}

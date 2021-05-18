@@ -1,0 +1,220 @@
+{% extends "base.html" %}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" href='{{ url_for("static", filename="css/manager.css" )}}'>
+<title>Manager Manages Stores</title>
+{% endblock %}
+
+{% block body %}
+<nav class="navbar navbar-light bg-light">
+    <div class="container">
+      <a type="button" class="btn btn-block btn-success" href="{{ url_for('logout') }}">Logout</a>
+    </div>
+</nav>
+<div class="container m-5 text-center">
+    <div class="row m-5">
+        <h1>Chain Manager Manage Stores</h1>
+    </div>
+    <form action="/managerStore" method="POST">
+        <div class="row mt-3">
+            <div class="col-sm-2"></div>
+            <label for="chain" class="col-form-label col-sm-2">Chain</label>
+            <div class="col-sm-2">
+                <input type="text" name="chain" id="chain" disabled
+                value="{{ chain }}" class="form-control">
+            </div>
+            <label for="store" class="col-form-label col-sm-2">Name</label>
+            <div class="col-sm-2">
+                <input type="numeric" name="store" id="store" class="form-control">
+            </div>
+            <div class="col-sm-2"></div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-2">Total Range</div>
+            <div class="col-sm-4">
+                <div class="d-flex justify-content-center">
+                    <label for="min" class="visually-hidden">Min</label>
+                    <input type="numeric" name="min" id="min"
+                    placeholder="min" class="form-control">
+                    <div> 
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash" viewBox="0 0 16 16">
+                            <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z"/>
+                        </svg>
+                    </div>
+                    <label for="max" class="visually-hidden">Max</label>
+                    <input type="numeric" name="max" id="max" 
+                    placeholder="max" class="form-control">
+                </div>
+            </div>
+        </div>
+        <table class="table table-primary table-striped ms-5 mt-4">
+            <thead>
+                <tr>
+                    <th scope="col">Name
+                        <button class="btn" onclick="sortName()" type="button">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5zm-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5z"/>
+                            </svg>
+                        </button>
+                    </th>
+                    <th scope="col">Address
+                        <button class="btn" onclick="sortAddress()" type="button">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5zm-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5z"/>
+                            </svg>
+                        </button>
+                    </th>
+                    <th scope="col"># Orders
+                        <button class="btn" onclick="sortOrders()" type="button">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5zm-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5z"/>
+                            </svg>
+                        </button>
+                    </th>
+                    <th scope="col">Employees
+                        <button class="btn" onclick="sortEmployees()" type="button">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5zm-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5z"/>
+                            </svg>
+                        </button>
+                    </th>
+                    <th scope="col">Total
+                        <button class="btn" onclick="sortTotal()" type="button">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5zm-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5z"/>
+                            </svg>
+                        </button>
+                    </th>
+                </tr>
+            </thead>
+            <tbody name="tableBody">
+                {% for store in stores %}
+                <tr>
+                    <td>{{ store[0] }}</td>
+                    <td>{{ store[1] }}</td>
+                    <td>{{ store[2] }}</td>
+                    <td>{{ store[3] }}</td>
+                    <td>{{ store[4] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="m-5 d-flex justify-content-evenly">
+            <a href="{{ url_for('manager') }}" type="button" class="btn btn-lg btn-secondary">Back</a>
+            <a href="{{ url_for('manager_manage_store') }}" type='reset' class="btn btn-lg btn-primary">Reset</a>
+            <button type="submit" class="btn btn-lg btn-primary">Filter</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    var states=[0,0,0,0,0];
+    var data=eval(JSON.parse('{{ states | tojson }}'));
+    function sortName() {
+        var orderedData;
+        if (states[0]==0) {
+            orderedData = data[0];
+            states[0]=1;
+        }else{
+            orderedData=data[1];
+            states[0]=0
+        }
+        clearTable()
+        //create table
+        let tableBody=document.querySelector('tbody[name="tableBody"]');
+        for(var i=0;i<orderedData.length;i++){
+            tableBody.appendChild(createRow(orderedData[i]));
+        }
+    }
+    function sortAddress() {
+        var orderedData;
+        if (states[1]==0) {
+            orderedData = data[2];
+            states[1]=1;
+        }else{
+            orderedData=data[3];
+            states[1]=0
+        }
+        clearTable()
+        //create table
+        let tableBody=document.querySelector('tbody[name="tableBody"]');
+        for(var i=0;i<orderedData.length;i++){
+            tableBody.appendChild(createRow(orderedData[i]));
+        }
+    }
+    function sortOrders() {
+        var orderedData;
+        if (states[2]==0) {
+            orderedData = data[4];
+            states[2]=1;
+        }else{
+            orderedData=data[5];
+            states[2]=0
+        }
+        clearTable()
+        //create table
+        let tableBody=document.querySelector('tbody[name="tableBody"]');
+        for(var i=0;i<orderedData.length;i++){
+            tableBody.appendChild(createRow(orderedData[i]));
+        }
+    }
+    function sortEmployees() {
+        var orderedData;
+        if (states[3]==0) {
+            orderedData = data[6];
+            states[3]=1;
+        }else{
+            orderedData=data[7];
+            states[3]=0
+        }
+        clearTable()
+        //create table
+        let tableBody=document.querySelector('tbody[name="tableBody"]');
+        for(var i=0;i<orderedData.length;i++){
+            tableBody.appendChild(createRow(orderedData[i]));
+        }
+    }
+    function sortTotal() {
+        var orderedData;
+        if (states[4]==0) {
+            orderedData = data[8];
+            states[4]=1;
+        }else{
+            orderedData=data[9];
+            states[4]=0
+        }
+        clearTable()
+        //create table
+        let tableBody=document.querySelector('tbody[name="tableBody"]');
+        for(var i=0;i<orderedData.length;i++){
+            tableBody.appendChild(createRow(orderedData[i]));
+        }
+    }
+    function clearTable() {
+        let tableBody = document.querySelector('tbody[name="tableBody"]')
+        while (tableBody.firstChild) {
+            tableBody.removeChild(tableBody.firstChild);
+        }
+    }
+    function createRow(store) {
+        let row = document.createElement('tr');
+        let cell1 = createCell(store[0]);
+        let cell2 = createCell(store[1]);
+        let cell3 = createCell(store[2]);
+        let cell4 = createCell(store[3]);
+        let cell5 = createCell(store[4]);
+        row.appendChild(cell1);
+        row.appendChild(cell2);
+        row.appendChild(cell3);
+        row.appendChild(cell4);
+        row.appendChild(cell5);
+        return row;
+    }
+    function createCell(data) {
+        let cell = document.createElement('td');
+        cell.textContent = data;
+        return cell;
+    }
+</script>
+{% endblock %}

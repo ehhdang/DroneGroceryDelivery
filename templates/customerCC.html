@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/customer.css') }}">
+<title>Customer Credit Card</title>
+{% endblock %}
+
+{% block body %}
+<nav class="navbar navbar-light bg-light">
+    <div class="container">
+      <a type="button" class="btn btn-block btn-success" href="{{ url_for('logout') }}">Logout</a>
+    </div>
+</nav>
+<div class="container text-center m-3">
+    <div class="row m-4">
+        <h1>Change Credit Card Information</h1>
+        {% if error %}
+            <div class="alert alert-danger text-center my-2" role="alert">
+              Your card has expired! Please enter a valid credit card
+          </div>
+        {% endif %}
+    </div>
+    <form action="/customerCC" method="POST"> 
+        <div class="row m-3 g-3">
+            <div class="col-md-2"></div>
+            <label for="username" class="col-sm-2 col-form-label">Username</label>
+            <div class="col-sm-5">
+                <input type="text" name='username' id='username' disabled value="{{ customer }}" class="form-control">
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+        <div class="row m-3 g-3">
+            <div class="col-md-2"></div>
+            <label for="fname" class="col-sm-2 col-form-label">First Name</label>
+            <div class="col-sm-5">
+                <input type="text" id="fname" name="fname" class="form-control" disabled value="{{ fname }}">
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+        <div class="row m-3 g-3">
+            <div class="col-md-2"></div>
+            <label for="lname" class="col-sm-2 col-form-label">Last Name</label>
+            <div class="col-sm-5">
+                <input type="text" id="lname" name="lname" class="form-control" disabled value="{{ lname }}">
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+        <div class="row m-3 g-3">
+            <div class="col-md-2"></div>
+            <label for="ccNumber" class="col-sm-2 col-form-label">Credit Card Number</label>
+            <div class="col-sm-5">
+                <input class="form-control" type="text" id="ccNumber" name="ccNumber"
+                pattern="[0-9\s]{13,19}" placeholder="xxxx xxxx xxxx xxxx" required>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+        <div class="row m-3 g-3">
+            <div class="col-md-2"></div>
+            <label for="cvv" class="col-sm-2 col-form-label">Security Code</label>
+            <div class="col-sm-5">
+                <input type="numeric" id="cvv" name="cvv" class="form-control" pattern="[0-9\s]{3}" required>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+        <div class="row m-3 g-3">
+            <div class="col-md-2"></div>
+            <label for="expDate" class="col-sm-2 col-form-label">Expiration Date</label>
+            <div class="col-sm-3">
+                <input class="form-control" type="date" id="expDate" name="expDate" required>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+        <div class="m-5 d-flex justify-content-evenly">
+            <a href="{{ url_for('customer') }}" type="button" class="btn btn-lg btn-secondary button">Back</a>
+            <button type="submit" class="btn btn-lg btn-primary button">Approve</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

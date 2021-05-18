@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block head %}
+<title>Login Error</title>
+{% endblock %}
+
+{% block body %}
+<div class="container text-center mt-5 main">
+    <div class='row m-3'>
+        <div class="alert alert-danger text-center mb-5" role="alert">
+            username and password do not exist. Please try again!
+        </div>
+    </div>
+    <div class='row m-3 d-flext justify-content-evenly'>
+        <div class="col-sm-5">
+            <a href="/login" class="btn btn-primary btn-lg btn-block button" type="button">Log in</a>
+        </div>
+        <div class="col-sm-5">
+            <a href="/register" class="btn btn-primary btn-lg btn-block button" type="submit">Register</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

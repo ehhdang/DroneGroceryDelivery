@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/admin.css') }}">
+<title>Admin Store</title>
+{% endblock %}
+
+{% block body %}
+<nav class="navbar navbar-light bg-light">
+    <div class="container">
+      <a type="button" class="btn btn-block btn-success" href="{{ url_for('logout') }}">Logout</a>
+    </div>
+</nav>
+<div class="container text-center m-5">
+    <div class="row m-4">
+        <h1>Admin Create New Store</h1>
+    </div>
+    {% if message %}
+    <div class="alert alert-danger text-center mb-5" role="alert">
+      {{ message }}
+    </div>
+    {% endif %}
+    <form action="/adminStore" method="POST"> 
+        <div class="row m-3 g-3 justify-content-center">
+            <div class="col-md-2"></div>
+            <label for="chain" class="col-sm-3 col-form-label">Affiliated Grocery Chain</label>
+            <div class="col-sm-5">
+                <select class="form-select" name="chain" id="chain" required autofocus>
+                    {% for row in chains%}
+                    <option value="{{ row[0] }}">{{ row[0] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+        <div class="row m-3 g-3">
+            <div class="col-md-2"></div>
+            <label for="store" class="col-sm-3 col-form-label">Grocery Store Location Name</label>
+            <div class="col-sm-5">
+                <input type="text" id="store" name="store" class="form-control" required>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+        <div class="row m-3 g-3">
+            <div class="col-md-2"></div>
+            <label for="street" class="col-sm-1 col-form-label">Street</label>
+            <div class="col-sm-7">
+                <input type="text" id="street" name="street" class="form-control" required>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+        <div class="row m-3 g-3">
+            <div class="col-md-2"></div>
+            <label for="city" class="col-sm-1 col-form-label">City</label>
+            <div class="col-sm-2">
+                <input type="text" id="city" name="city" class="form-control">
+            </div>
+            <label for="state" class="col-sm-1 col-form-label">State</label>
+            <div class="col-sm-1">
+                <input type="text" id="state" name="state" class="form-control" pattern="[a-zA-Z\s]{2}" required>
+            </div>
+            <label for="zip" class="col-sm-1 col-form-label">ZIP</label>
+            <div class="col-sm-2">
+                <input type="text" id="zip" name="zip" class="form-control" pattern="[0-9\s]{5}" required>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+        <div class="m-5 d-flex justify-content-evenly">
+            <a href="{{ url_for('admin') }}" type="button" class="btn btn-lg btn-secondary button">Back</a>
+            <button type="submit" class="btn btn-lg btn-primary button">Create</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

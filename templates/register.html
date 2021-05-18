@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/register.css') }}">
+<title>Register</title>
+{% endblock %}
+
+{% block body %}
+<div class="container text-center mt-5 role-form">
+    <div class="row m-3 question">
+        <p>Are you a customer or an employee?</p>
+    </div>
+    <div class="row g-3 buttons">
+        <div class="col-sm-5">
+            <a href="{{ url_for('customer_register') }}" class="btn btn-lg btn-primary button" >Customer</a>
+        </div>
+        <div class="col-sm-5">
+            <a href="{{ url_for('employee_register') }}" class="btn btn-lg btn-primary button">Employee</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/login.css') }}">
+<title>Log in</title>
+{% endblock %}
+
+{% block body %}
+<div class="container text-center mt-5">
+    <form action="/login" method="POST" class="form-signin">
+        <div class='row m-3'>
+            <h1>Log in</h1>
+        </div>
+        <div class='row m-3'>
+            <label for="username" class="visually-hidden">Username: </label>
+            <input type="text" id="username" name="username" class="form-control" 
+            placeholder="username" required autofocus><br>
+        </div>
+        <div class='row m-3'>
+            <label for="password" class="visually-hidden">Password: </label>
+            <input type="text" id="password" name="password" class="form-control" 
+            placeholder="password" required>
+        </div>
+        <div class='row m-3'>
+            <button class="btn btn-primary btn-lg btn-block" type="submit">Submit</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

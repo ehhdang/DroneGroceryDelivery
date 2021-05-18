@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block head %}
+<!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/register.css') }}"> -->
+<title>Customer Register</title>
+{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="row text-center m-4">
+        <h1>Customer Register</h1>
+    </div>
+    {% if message %}
+    <div class="alert alert-danger text-center mb-5" role="alert">
+        {{ message }}
+      </div>
+    {% endif %}
+    <form action="/customerregister", method="POST">
+        <div class="row m-2">
+            <label for="fname" class="col-sm-2 col-form-label">First Name: </label>
+            <div class="col-sm-4">
+                <input type="text" id="fname" name="fname" class="form-control" autofocus required>
+            </div>
+            <div class="col-sm-1"></div>
+            <label for="street" class="col-sm-1 col-form-label">Street: </label>
+            <div class="col-sm-4">
+                <input type="text" id="street" name="street" class="form-control" required>
+            </div>
+        </div>
+        <div class="row m-2">
+            <label for="lname" class="col-sm-2 col-form-label">Last Name: </label>
+            <div class="col-sm-4">
+                <input type="text" id="lname" name="lname" class="form-control" required>
+            </div>
+            <div class="col-sm-1"></div>
+            <label for="city" class="col-sm-1 col-form-label">City: </label>
+            <div class="col-sm-4">
+                <input type="text" id="city" name="city" class="form-control" required>
+            </div>
+        </div>
+        <div class="row m-2">
+            <label for="username" class="col-sm-2 col-form-label">Username: </label>
+            <div class="col-sm-4">
+                <input type="text" id="username" name="username" class="form-control" required>
+            </div>
+            <div class="col-sm-1"></div>
+            <label for="state" class="col-sm-1 col-form-label">State: </label>
+            <div class="col-sm-4">
+                <input type="text" id="state" name="state" class="form-control" pattern="[a-zA-Z\s]{2}" required>
+            </div>
+        </div>
+        <div class="row m-2">
+            <label for="password" class="col-sm-2 col-form-label">Password: </label>
+            <div class="col-sm-4">
+                <input type="password" id="password" name="password" class="form-control" 
+                pattern=".{8,}" required>
+            </div>
+            <div class="col-sm-1"></div>
+            <label for="zip" class="col-sm-1 col-form-label">Zip: </label>
+            <div class="col-sm-4">
+                <input type="numeric" id="zip" name="zip" class="form-control"
+                inputmode="numeric" pattern="[0-9\s]{5}" required>
+            </div>
+        </div>
+        <div class="row m-2">
+            <label for="confirm-pass" class="col-sm-2 col-form-label">Confirm: </label>
+            <div class="col-sm-4">
+                <input type="password" id="confirm-pass" name="confirm-pass" class="form-control" 
+                pattern=".{8,}" required>
+            </div>
+        </div>
+        <div class="row m-2">
+            <label for="ccNumber" class="col-sm-2 col-form-label">Card Number: </label>
+            <div class="col-sm-4">
+                <input class="form-control" type="numeric" id="ccNumber" name="ccNumber" inputmode="numeric"
+                pattern="[0-9\s]{13, 19}" autocomplete="cc-number" placeholder="xxxx xxxx xxxx xxxx" required>
+            </div>
+        </div>
+        <div class="row m-2">
+            <label for="cvv" class="col-sm-2 col-form-label">CVV: </label>
+            <div class="col-sm-4">
+                <input class="form-control" type="numeric" id="cvv" name="cvv" inputmode="numeric"
+                pattern="[0-9\s]{3}" autocomplete="cc-name" placeholder="xxx" required>
+            </div>
+            <div class="col-sm-1"></div>
+            <label for="expDate" class="col-sm-1 col-form-label">Exp: </label>
+            <div class="col-sm-4">
+                <input class="form-control" type="date" id="expDate" name="expDate" required>
+            </div>
+        </div>
+        <div class="row m-4">
+            <button class="btn btn-primary btn-lg btn-block" type="submit">Submit</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

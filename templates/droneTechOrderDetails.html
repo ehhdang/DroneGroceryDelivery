@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+
+{% block head %}
+<title>Drone Technician Orders</title>
+{% endblock %}
+
+{% block body %}
+<nav class="navbar navbar-light bg-light">
+    <div class="container">
+      <a type="button" class="btn btn-block btn-success" href="{{ url_for('logout') }}">Logout</a>
+    </div>
+</nav>
+<div class="container text-center my-5">
+    <div class="row my-4">
+        <h1>Order Details</h1>
+    <form class="row my-4" action="/droneTechAssignOrder/{{ orderDetails[1] }}" method="POST">
+        <div class="col-sm-6">
+            <div class="container">
+                <div class="row my-3">
+                    <label for="customerName" class="col-4 col-form-label">Customer Name</label>
+                    <div class="col-8">
+                        <input name="customerName" id="customerName" class="form-control" disabled value="{{ orderDetails[0] }}">
+                    </div>
+                </div>
+                <div class="row my-3">
+                    <label for="orderID" class="col-4 col-form-label">Order ID</label>
+                    <div class="col-8">
+                        <input name="orderID" id="orderID" class="form-control" disabled value="{{ orderDetails[1] }}">
+                    </div>
+                </div>
+                <div class="row my-3">
+                    <label for="totalAmount" class="col-4 col-form-label">Total Amount</label>
+                    <div class="col-8">
+                        <input name="totalAmount" id="totalAmount" class="form-control" disabled value="${{ orderDetails[2] }}">
+                    </div>
+                </div>
+                <div class="row my-3">
+                    <label for="totalItems" class="col-4 col-form-label">Total Items</label>
+                    <div class="col-8">
+                        <input name="totalItems" id="totalItems" class="form-control" disabled value="{{ orderDetails[3] }}">
+                    </div>
+                </div>
+                <div class="row my-3">
+                    <label for="date" class="col-4 col-form-label">Date Of Purchase</label>
+                    <div class="col-8">
+                        <input name="date" id="date" class="form-control" disabled value="{{ orderDetails[4] }}">
+                    </div>
+                </div>
+                <div class="row my-3">
+                    <label for="droneID" class="col-4 col-form-label">Drone ID</label>
+                    <div class="col-8">
+                        {% if orderDetails[5]==None %}
+                        <select class="form-select" name="droneID">
+                            <option value="empty">N/A</option>
+                        </select>
+                        {% else %}
+                        <input name="droneID" class="form-control" readonly value="{{ orderDetails[5] }}">
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row my-3">
+                    <label for="droneTech" class="col-4 col-form-label">Store Associate</label>
+                    <div class="col-8">
+                        {% if orderDetails[6]==None %}
+                        <select name="droneTech" class="form-select" onchange="populateDrones()">
+                            <option value="empty">N/A</option>
+                            <option value='{{ username }}'>{{ username }}</option>
+                        </select>
+                        {% else %}
+                        <input name="droneTech" class="form-control" readonly value="{{ orderDetails[6] }}">
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row my-3">
+                    <label for="status" class="col-4 col-form-label">Status</label>
+                    <div class="col-8" name="orderStatus">
+                        {% if name==orderDetails[6] %}
+                            {% if orderDetails[7]=='Delivered' %}
+                            <input name="status" class="form-control" readonly value="{{ orderDetails[7] }}">
+                            {% else %}
+                            <select name="status" class="form-select">
+                                <option value="{{ orderDetails[7] }}">{{ orderDetails[7] }}</option>
+                                <option value="Drone Assigned">Drone Assigned</option>
+                                <option value="In Transit">In Transit</option>
+                                <option value="Delivered">Delivered</option>
+                            </select>
+                            {% endif %}
+                        {% else %}
+                            <input name="status" class="form-control" readonly value="{{ orderDetails[7] }}">
+                        {% endif %}    
+                    </div>
+                </div>
+                <div class="row my-3">
+                    <label for="address" class="col-4 col-form-label">Address</label>
+                    <div class="col-8">
+                        <input name="address" id="address" class="form-control" disabled value="{{ orderDetails[8] }}">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-5 my-3">
+            <div class="container">
+                <div class="row ms-5 fs-4">Items:</div>
+                <table class="table table-primary table-striped ms-5 mt-3">
+                    <thead>
+                        <tr>
+                            <th scope="col">Item</th>
+                            <th scope="col">Count</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in orderItems %}
+                        <tr>
+                            <td>{{  item[0] }}</td>
+                            <td>{{  item[1] }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="d-flex justify-content-evenly mx-3 my-4">
+            <a href="{{url_for('dronetech_view_store_order')}}" type="button" class="btn btn-lg btn-block btn-secondary">Back</a>
+            {% if orderDetails[6]==None or (name==orderDetails[6] and orderDetails[7]!='Delivered') %}
+            <button type="submit" class="btn btn-lg btn-block btn-primary">Save</button>
+            {% else %}
+            <button type="submit" class="btn btn-lg btn-block btn-primary" disabled>Save</button>
+            {% endif %}
+        </div>
+    </form>
+</div>
+
+<script>
+    var drones=eval(JSON.parse('{{ drones | tojson }}'))
+    var username='{{ username }}';
+    function populateDrones() {
+        var droneTechSelector=document.querySelector('select[name="droneTech"]');
+        var droneIDSelector=document.querySelector("select[name='droneID']");
+        var divElement=document.querySelector('div[name="orderStatus"]');
+        removeAllChildren(droneIDSelector);
+        removeAllChildren(divElement);
+        if (droneTechSelector.value==username) {
+            for (var i=0;i<drones.length;i++) {
+                droneIDSelector.appendChild(createOption(drones[i][0]));
+            }
+            divElement.appendChild(createSelector());
+        } else {
+            droneIDSelector.appendChild(createOption("N/A"));
+            divElement.appendChild(createDisabledInput());
+        }
+    }
+    function createDisabledInput() {
+        var inputElement=document.createElement("input")
+        inputElement.disabled=true;
+        inputElement.value="Pending";
+        inputElement.className="form-control";
+        return inputElement;
+    }
+    function createSelector() {
+        var statusSelector=document.createElement('select');
+        statusSelector.name="status";
+        statusSelector.className="form-select";
+        statusSelector.appendChild(createOption("Drone Assigned"));
+        statusSelector.appendChild(createOption("In Transit"));
+        statusSelector.appendChild(createOption("Delivered"));
+        return statusSelector;
+    }
+    function removeAllChildren(element) {
+        while (element.firstChild) {
+            element.removeChild(element.firstChild);
+        }
+    }
+    function createOption(data) {
+        var option=document.createElement("option");
+        if (data=="N/A") {
+            option.value="empty";
+        } else {
+            option.value=data;
+        }
+        option.textContent=data;
+        return option;
+    }
+</script>
+{% endblock %}

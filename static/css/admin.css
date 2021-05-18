@@ -1,0 +1,14 @@
+.button {
+    width: 250px;
+}
+.form {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+.row-size {
+    height: 300px;
+}
+.custom-table {
+    width: 80%;
+}

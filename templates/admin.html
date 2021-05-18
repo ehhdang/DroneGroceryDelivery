@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/admin.css') }}">
+<title>Admin Home</title>
+{% endblock %}
+
+{% block body %}
+<nav class="navbar navbar-light bg-light">
+    <div class="container">
+      <a type="button" class="btn btn-block btn-success" href="{{ url_for('logout') }}">Logout</a>
+    </div>
+</nav>
+
+<div class="container text-center m-5 main">
+    <div class="row m-4">
+        <h1>Admin Home</h1>
+    </div>
+    <div class="row m-5">
+        <div class="col-4">
+            <a href='{{ url_for("admin_create_item") }}' class="btn btn-lg btn-block btn-primary button" type="button" id="createItemBtn">Create Item</a>
+        </div>
+        <div class="col-4">
+            <a href='{{ url_for("admin_create_drone") }}' class="btn btn-lg btn-block btn-primary button" type="button" id="createDroneBtn">Create Drone</a>
+        </div>
+        <div class="col-4">
+            <a href='{{ url_for("admin_view_customer") }}' class="btn btn-lg btn-block btn-primary button" type="button" id="viewCustomerBtn">View Customer Info</a>
+        </div>
+    </div>
+    <div class="row m-5">
+        <div class="col-6">
+            <a href='{{ url_for("admin_create_chain") }}' class="btn btn-lg btn-block btn-primary button" type="button" id="createChainBtn">Create Grocery Chain</a>
+        </div>
+        <div class="col-6">
+            <a href='{{ url_for("admin_create_store") }}' class="btn btn-lg btn-block btn-primary button" type="button" id="createStoreBtn">Create Store</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

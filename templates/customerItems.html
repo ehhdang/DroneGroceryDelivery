@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/customer.css') }}">
+<title>Store Items</title>
+{% endblock %}
+
+{% block body %}
+<nav class="navbar navbar-light bg-light">
+    <div class="container">
+      <a type="button" class="btn btn-block btn-success" href="{{ url_for('logout') }}">Logout</a>
+    </div>
+</nav>
+
+<div class="container m-5 text-center">
+    <di class="row m-3">
+        <h1>Customer View Store Items</h1>
+    </di>
+    <form action="/customerItems" method="POST" id="filter" class="mt-4">
+        <div class="row m-3 align-items-center">
+            <div class="col-sm-2"></div>
+            <label for="username" class="col-sm-1">Username</label>
+            <div class="col-sm-3">
+                <input type="text" name="username" id="username" disabled class="form-control" value='{{ customer }}'>
+            </div>
+            <label for="chain" class="col-sm-1">Chain</label>
+            <div class="col-sm-3">
+                <select class="form-select" name="chain" id="chain" onchange="populateStores()">
+                    {% if hasStores[0]==0 %}
+                        <option>Null</option>
+                    {% else %}
+                        {% if prevSelections[0]==None %}
+                        <option value="empty">Please Select</option>
+                        {% else %}
+                        <option value="{{ prevSelections[0] }}">{{ prevSelections[0] }}</option>
+                        {% endif %}
+                        {% for chain in stores %}
+                            {% if chain != prevSelections[0] %}
+                            <option value='{{ chain }}'>{{ chain }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                </select>
+            </div>
+            <div class="col-sm-2"></div>
+        </div>
+        <div class="row m-3 align-items-center">
+            <div class="col-sm-2"></div>
+            <label for='category' class="col-sm-1">Category</label>
+            <div class="col-sm-3">
+                <select class="form-select" name="category" id="category">
+                    <option value="empty">Please Select</option>
+                    <option value="Dairy">Dairy</option>
+                    <option value="Bakery">Bakery</option>
+                    <option value="Meat">Meat</option>
+                    <option value="Produce">Produce</option>
+                    <option value="Personal Care">Personal Care</option>
+                    <option value="Paper Goods">Paper Goods</option>
+                    <option value="Beverages">Beverages</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <label for="store" class="col-sm-1">Store</label>
+            <div class="col-sm-3">
+                <select class="form-select" name="store" id="store" onchange="documentSelections()">
+                    {% if hasStores[0]==0 %}
+                        <option>Null</option>
+                    {% else %}
+                        {% if prevSelections[0]==None %}
+                            <option value="empty">Please Select</option>
+                        {% else %}
+                            <option value="{{ prevSelections[1] }}">{{ prevSelections[1] }}</option>
+                        {% endif %}
+                    {% endif %}
+                </select>
+            </div>
+            <div class="col-sm-2"></div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-8 d-flex justify-content-evenly">
+                <a href="{{ url_for('customer') }}" type="reset" class="btn btn-block btn-secondary button">Back</a>
+                <a href="{{ url_for('customer_view_store_items') }}" type="reset" class="btn btn-block btn-secondary button ">Reset</a>
+                <button type="submit" class="btn btn-block btn-primary button">Filter</button>
+            </div>
+            <div class="col-sm-2"></div>
+        </div>
+    </form>
+    {% if hasStores[0]!=1 %}
+    <div class="d-flex justify-content-center m-4">
+        <div class="alert alert-info" role="alert">
+            There are currently no stores in your area. Please check back later!
+        </div>
+    </div>
+    {% endif %}
+
+    {% if hasStores[0]==1 and hasStores[1]==1 %}
+    <form action="/customerNewOrder" method="POST" class="m-5 border border-2 border-primary px-3">
+        <div class="row p-2 border-bottom border-2 border-primary">
+            <div class="col-sm-4">Items</div>
+            <div class="col-sm-2 border-end border-2 border-primary">Quantity</div>
+            <div class="col-sm-4">Items</div>
+            <div class="col-sm-2">Quantity</div>
+        </div>
+        <div class="visually-hidden">
+            <label for="username" class="col-sm-1">Username</label>
+            <input type="text" name="username" id="username" class="form-control" value='{{ customer }}' readonly="true">
+            <label for="selectedChain" class="col-sm-1">Chain</label>
+            <input type="text" name="selectedChain" id="selectedChain" class="form-control" value='{{ prevSelections[0] }}' readonly="true">
+            <label for="selectedStore" class="col-sm-1">Store</label>
+            <input type="text" name="selectedStore" id="selectedStore" class="form-control" value='{{ prevSelections[1] }}' readonly="true">
+        </div>
+        <div class="row p-2">
+            {% for item in items %}
+            <div class="col-sm-4 d-flex justify-content-start mt-1">
+                {{ item[0] }}
+            </div>
+            <div class="col-sm-2 mt-1">
+                <select class="form-select" name='{{ item[0] }}'>
+                    {% for i in range(item[1]+1) %}
+                        <option value='{{ i }}'>{{ i }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="m-3 d-flex justify-content-evenly">
+            <button type="submit" class="btn btn-lg btn-primary">Place Order</button>
+        </div>
+    </form>
+    {% endif %}
+</div>
+
+<script>
+    var stores=eval(JSON.parse('{{ stores | tojson }}'));
+    function populateStores() {
+        var chainSelector=document.querySelector("select[name='chain']")
+        var chainStores=stores[chainSelector.value];
+        var storeSelector=document.querySelector("select[name='store']")
+        clearSelector(storeSelector);
+        for (var i=0;i<chainStores.length;i++) {
+            var store=chainStores[i];
+            storeSelector.appendChild(createOption(store));
+        }
+    }
+    function clearSelector(selector) {
+        while (selector.firstChild) {
+            selector.removeChild(selector.firstChild);
+        }
+    }
+    function createOption(data) {
+        var option=document.createElement("option");
+        option.textContent=data;
+        option.value=data;
+        return option
+    }
+</script>
+{% endblock %}

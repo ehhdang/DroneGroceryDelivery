@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" href='{{ url_for("static", filename="css/manager.css" )}}'>
+<title>Manager View Drones</title>
+{% endblock %}
+
+{% block body %}
+<nav class="navbar navbar-light bg-light">
+    <div class="container">
+      <a type="button" class="btn btn-block btn-success" href="{{ url_for('logout') }}">Logout</a>
+    </div>
+</nav>
+<div class="container m-5 text-center">
+    <div class="row m-5">
+        <h1>Chain Manager View Drones</h1>
+    </div>
+    <form action="/managerDrone" method="POST">
+        <div class="row m-5">
+            <div class="col-sm-2"></div>
+            <label for="droneID" class="col-form-label col-sm-2">Drone ID</label>
+            <div class="col-sm-2">
+                <input type="numeric" name="droneID" id="droneID" autofocus class="form-control">
+            </div>
+            <label for="radius" class="col-form-label col-sm-2">Radius</label>
+            <div class="col-sm-2">
+                <input type="numeric" name="radius" id="radius" class="form-control">
+            </div>
+            <div class="col-sm-2"></div>
+        </div>
+        <table class="table table-primary table-striped ms-5 mt-4">
+            <thead>
+                <th scope="col">DroneID
+                    <button class="btn" onclick="sortDroneID()" type="button">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5zm-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5z"/>
+                          </svg>
+                    </button>
+                </th>
+                <th scope="col">Operator
+                    <button class="btn" disabled>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-tsunami" viewBox="0 0 16 16">
+                            <path d="M.036 12.314a.5.5 0 0 1 .65-.278l1.757.703a1.5 1.5 0 0 0 1.114 0l1.014-.406a2.5 2.5 0 0 1 1.857 0l1.015.406a1.5 1.5 0 0 0 1.114 0l1.014-.406a2.5 2.5 0 0 1 1.857 0l1.015.406a1.5 1.5 0 0 0 1.114 0l1.757-.703a.5.5 0 1 1 .372.928l-1.758.703a2.5 2.5 0 0 1-1.857 0l-1.014-.406a1.5 1.5 0 0 0-1.114 0l-1.015.406a2.5 2.5 0 0 1-1.857 0l-1.014-.406a1.5 1.5 0 0 0-1.114 0l-1.015.406a2.5 2.5 0 0 1-1.857 0l-1.757-.703a.5.5 0 0 1-.278-.65zm0 2a.5.5 0 0 1 .65-.278l1.757.703a1.5 1.5 0 0 0 1.114 0l1.014-.406a2.5 2.5 0 0 1 1.857 0l1.015.406a1.5 1.5 0 0 0 1.114 0l1.014-.406a2.5 2.5 0 0 1 1.857 0l1.015.406a1.5 1.5 0 0 0 1.114 0l1.757-.703a.5.5 0 1 1 .372.928l-1.758.703a2.5 2.5 0 0 1-1.857 0l-1.014-.406a1.5 1.5 0 0 0-1.114 0l-1.015.406a2.5 2.5 0 0 1-1.857 0l-1.014-.406a1.5 1.5 0 0 0-1.114 0l-1.015.406a2.5 2.5 0 0 1-1.857 0l-1.757-.703a.5.5 0 0 1-.278-.65zM2.662 8.08c-.456 1.063-.994 2.098-1.842 2.804a.5.5 0 0 1-.64-.768c.652-.544 1.114-1.384 1.564-2.43.14-.328.281-.68.427-1.044.302-.754.624-1.559 1.01-2.308C3.763 3.2 4.528 2.105 5.7 1.299 6.877.49 8.418 0 10.5 0c1.463 0 2.511.4 3.179 1.058.67.66.893 1.518.819 2.302-.074.771-.441 1.516-1.02 1.965a1.878 1.878 0 0 1-1.904.27c-.65.642-.907 1.679-.71 2.614C11.076 9.215 11.784 10 13 10h2.5a.5.5 0 0 1 0 1H13c-1.784 0-2.826-1.215-3.114-2.585-.232-1.1.005-2.373.758-3.284L10.5 5.06l-.777.388a.5.5 0 0 1-.447 0l-1-.5a.5.5 0 0 1 .447-.894l.777.388.776-.388a.5.5 0 0 1 .447 0l1 .5a.493.493 0 0 1 .034.018c.44.264.81.195 1.108-.036.328-.255.586-.729.637-1.27.05-.529-.1-1.076-.525-1.495-.426-.42-1.19-.77-2.477-.77-1.918 0-3.252.448-4.232 1.123C5.283 2.8 4.61 3.738 4.07 4.79c-.365.71-.655 1.433-.945 2.16-.15.376-.301.753-.463 1.13z"/>
+                          </svg>
+                    </button>
+                </th>
+                <th scope="col">Radius
+                    <button class="btn" onclick="sortRadius()" type="button">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5zm-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5z"/>
+                          </svg>
+                    </button>
+                </th>
+                <th scope="col">Zip Code
+                    <button class="btn" onclick="sortZipcode()" type="button">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5zm-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5z"/>
+                          </svg>
+                    </button>
+                </th>
+                <th scope="col">Status
+                    <button class="btn" onclick="sortStatus()" type="button">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5zm-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5z"/>
+                          </svg>
+                    </button>
+                </th>
+            </thead>
+            <tbody name="tableBody">
+                {% for drone in drones %}
+                <tr>
+                    <td>{{ drone[0] }}</td>
+                    <td>{{ drone[1] }}</td>
+                    <td>{{ drone[2] }}</td>
+                    <td>{{ drone[3] }}</td>
+                    <td>{{ drone[4] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="m-5 d-flex justify-content-evenly">
+            <a href="{{ url_for('manager') }}" type="button" class="btn btn-lg btn-secondary">Back</a>
+            <a href="{{ url_for('manager_view_drone') }}" type='reset' class="btn btn-lg btn-primary">Reset</a>
+            <button type="submit" class="btn btn-lg btn-primary">Filter</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    var states=[0,0,0,0];
+    var data=eval(JSON.parse('{{ states | tojson }}'))
+    function sortDroneID() {
+        var orderedData;
+        if (states[0]==0) {
+            orderedData = data[0];
+            states[0]=1;
+        }else{
+            orderedData=data[1];
+            states[0]=0
+        }
+        clearTable()
+        //create table
+        let tableBody=document.querySelector('tbody[name="tableBody"]');
+        for(var i=0;i<orderedData.length;i++){
+            tableBody.appendChild(createRow(orderedData[i]));
+        }
+    }
+    function sortRadius() {
+        var orderedData;
+        if (states[1]==0) {
+            orderedData = data[2];
+            states[1]=1;
+        }else{
+            orderedData=data[3];
+            states[1]=0
+        }
+        clearTable()
+        //create table
+        let tableBody=document.querySelector('tbody[name="tableBody"]');
+        for(var i=0;i<orderedData.length;i++){
+            tableBody.appendChild(createRow(orderedData[i]));
+        }
+    }
+    function sortZipcode() {
+        var orderedData;
+        if (states[2]==0) {
+            orderedData = data[4];
+            states[2]=1;
+        }else{
+            orderedData=data[5];
+            states[2]=0
+        }
+        clearTable()
+        //create table
+        let tableBody=document.querySelector('tbody[name="tableBody"]');
+        for(var i=0;i<orderedData.length;i++){
+            tableBody.appendChild(createRow(orderedData[i]));
+        }
+    }
+    function sortStatus() {
+        var orderedData;
+        if (states[3]==0) {
+            orderedData = data[6];
+            states[3]=1;
+        }else{
+            orderedData=data[7];
+            states[3]=0
+        }
+        clearTable()
+        //create table
+        let tableBody=document.querySelector('tbody[name="tableBody"]');
+        for(var i=0;i<orderedData.length;i++){
+            tableBody.appendChild(createRow(orderedData[i]));
+        }
+    }
+    function clearTable() {
+        let tableBody = document.querySelector('tbody[name="tableBody"]')
+        while (tableBody.firstChild) {
+            tableBody.removeChild(tableBody.firstChild);
+        }
+    }
+    function createRow(drone) {
+        let row = document.createElement('tr');
+        let cell1 = createCell(drone[0]);
+        let cell2 = createCell(drone[1]);
+        let cell3 = createCell(drone[2]);
+        let cell4 = createCell(drone[3]);
+        let cell5 = createCell(drone[4]);
+        row.appendChild(cell1);
+        row.appendChild(cell2);
+        row.appendChild(cell3);
+        row.appendChild(cell4);
+        row.appendChild(cell5);
+        return row;
+    }
+    function createCell(data) {
+        let cell = document.createElement('td');
+        cell.textContent = data;
+        return cell;
+    }
+</script>
+{% endblock %}

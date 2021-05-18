@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/admin.css') }}">
+<title>Admin Drone</title>
+{% endblock %}
+
+{% block body %}
+<nav class="navbar navbar-light bg-light">
+    <div class="container">
+      <a type="button" class="btn btn-block btn-success" href="{{ url_for('logout') }}">Logout</a>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="row m-5 text-center">
+        <h1>Admin Create Drone</h1>
+    </div>
+    <form action="/adminDrone" method="POST">
+        <div class="row m-3">
+            <div class="col-md-3"></div>
+            <label for="droneID" class="col-sm-2 col-form-label">Drone ID</label>
+            <div class="col-sm-4">
+                <input type='numeric' id="droneID" name="droneID" class="form-control" value='{{ droneID }}' disabled required>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+        <div class="row m-3">
+            <div class="col-md-3"></div>
+            <label for="zip" class="col-sm-2 col-form-label">Associated Zip Code</label>
+            <div class="col-sm-4">
+                <select id="zip" name="zip" class="form-select" required onchange="updateAssocates()">
+                    <option value="empty">Please Select</option>
+                    {% for zip in employees %}
+                    <option value="{{ zip }}">{{ zip }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+        <div class="row m-3">
+            <div class="col-md-3"></div>
+            <label for="radius" class="col-sm-2 col-form-label">Travel Radius</label>
+            <div class="col-sm-4">
+                <input type='numeric' id="radius" name="radius" class="form-control" required>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+        <div class="row m-3">
+            <div class="col-md-3"></div>
+            <label for="status" class="col-sm-1 col-form-label">Status</label>
+            <div class="col-sm-5">
+                <input type='text' id="status" name="status" class="form-control" value="Available" required disabled>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+        <div class="row m-3">
+            <div class="col-md-3"></div>
+            <label for="associate" class="col-sm-1 col-form-label">Store</label>
+            <div class="col-sm-5">
+                <select id="associate" name="associate" class="form-select" required>
+                    <option value="empty">Please Select</option>
+                </select>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+        <div class="m-5 d-flex justify-content-evenly">
+            <a href="{{ url_for('admin') }}" type="button" class="btn btn-lg btn-secondary button">Back</a>
+            <button type="submit" class="btn btn-lg btn-primary button">Create</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    var employees = JSON.parse('{{ employees | tojson }}');
+
+    function updateAssocates() {
+        let zipSelector = document.querySelector('select[name="zip"]');
+        let associateSelector = document.querySelector('select[name="associate"]');
+        while (associateSelector.firstChild) {
+            associateSelector.removeChild(associateSelector.firstChild);
+        }
+        associateSelector.appendChild(createOption("Please Select"));
+        let emp_list = employees[zipSelector.value];
+        for (var i=0; i<emp_list.length; i++) {
+            associateSelector.appendChild(createOption(emp_list[i]));
+        }
+    }
+
+    function createOption(name) {
+        let optionElement = document.createElement('option');
+        optionElement.textContent = name;
+        return optionElement;
+    }
+
+</script>
+{% endblock %}

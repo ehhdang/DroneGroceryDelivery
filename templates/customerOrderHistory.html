@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/customer.css') }}">
+<title>Customer Order History</title>
+{% endblock %}
+
+{% block body %}
+<nav class="navbar navbar-light bg-light">
+    <div class="container">
+      <a type="button" class="btn btn-block btn-success" href="{{ url_for('logout') }}">Logout</a>
+    </div>
+</nav>
+<div class="container text-center m-5">
+    <div class="row m-4">
+        <h1>Customer View Order History</h1>
+        <!-- {% if error %}
+          <div class="align-items-center mt-3 errorMsg" role="alert">
+              Your card has expired! Please enter a valid credit card
+          </div>
+        {% endif %} -->
+    </div>
+    <form action="/customerOrderHistory" method="POST"> 
+        <div class="row m-3 g-3">
+            <div class="col-md-2"></div>
+            <label for="username" class="col-sm-2 col-form-label">Username</label>
+            <div class="col-sm-5">
+                <input type="text" name='username' id='username' disabled value="{{ customer }}" class="form-control">
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+        <div class="row m-3 g-3">
+            <div class="col-md-2"></div>
+            <label for="orderID" class="col-sm-2 col-form-label">Order ID</label>
+            <div class="col-sm-5">
+                <select id="orderID" name="orderID" class="form-select" onchange="populateOrder()">
+                    <option value='{{ initial[0] }}'>{{ initial[0] }}</option>
+                    {% for orderID in orders %}
+                    {% if orderID != initial[0] %}
+                    <option value='{{ orderID }}'>{{ orderID }}</option>
+                    {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+        <div class="row m-3 g-3">
+            <div class="col-md-2"></div>
+            <label for="totalAmount" class="col-sm-2 col-form-label">Total Amount</label>
+            <div class="col-sm-5">
+                <input type="text" id="totalAmount" name="totalAmount" class="form-control" disabled value="{{ initial[1] }}">
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+        <div class="row m-3 g-3">
+            <div class="col-md-2"></div>
+            <label for="totalItems" class="col-sm-2 col-form-label">Total Items</label>
+            <div class="col-sm-5">
+                <input class="form-control" type="text" id="totalItems" name="totalItems" disabled value='{{ initial[2] }}'>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+        <div class="row m-3 g-3">
+            <div class="col-md-2"></div>
+            <label for="date" class="col-sm-2 col-form-label">Date Of Purchase</label>
+            <div class="col-sm-5">
+                <input type="date" id="date" name="date" class="form-control" disabled value='{{ initial[3] }}'>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+        <div class="row m-3 g-3">
+            <div class="col-md-2"></div>
+            <label for="droneID" class="col-sm-2 col-form-label">Drone ID</label>
+            <div class="col-sm-5">
+                <input class="form-control" type="number" id="droneID" name="droneID" disabled value='{{ initial[4] }}'>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+        <div class="row m-3 g-3">
+            <div class="col-md-2"></div>
+            <label for="droneTech" class="col-sm-2 col-form-label">Store Associate</label>
+            <div class="col-sm-5">
+                <input class="form-control" type="text" id="droneTech" name="droneTech" disabled value='{{ initial[5] }}'>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+        <div class="row m-3 g-3">
+            <div class="col-md-2"></div>
+            <label for="status" class="col-sm-2 col-form-label">Status</label>
+            <div class="col-sm-5">
+                <input class="form-control" type="text" id="status" name="status" disabled value='{{ initial[6] }}'>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+        <div class="m-5 d-flex justify-content-evenly">
+            <a href="{{ url_for('customer') }}" type="button" class="btn btn-lg btn-secondary button">Back</a>
+        </div>
+    </form>
+</div>
+
+<script>
+    var orders=eval(JSON.parse('{{ orders | tojson }}')) // orders[orderID]=[totalAmount,totalItems,date,droneID,droneTech,Status]
+    function populateOrder() {
+        var orderIDSelector=document.querySelector('select[name="orderID"]');
+        var orderDetails=orders[orderIDSelector.value];
+        var totalAmountInput=document.querySelector('input[name="totalAmount"]');
+        totalAmountInput.value=orderDetails[0];
+        var totalItemsInput=document.querySelector('input[name="totalItems"]');
+        totalItemsInput.value=orderDetails[1];
+        var dateInput=document.querySelector('input[name="date"]');
+        dateInput.value=orderDetails[2]
+        var droneIDInput=document.querySelector('input[name="droneID"]');
+        droneIDInput.value=orderDetails[3];
+        var droneTechInput=document.querySelector('input[name="droneTech"]');
+        droneTechInput.value=orderDetails[4];
+        var statusInput=document.querySelector('input[name="status"]');
+        statusInput.value=orderDetails[5];
+    }
+</script>
+{% endblock %}

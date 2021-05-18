@@ -1,0 +1,220 @@
+{% extends "base.html" %}
+
+{% block head %}
+<title>Drone Technician Orders</title>
+{% endblock %}
+
+{% block body %}
+<nav class="navbar navbar-light bg-light">
+    <div class="container">
+      <a type="button" class="btn btn-block btn-success" href="{{ url_for('logout') }}">Logout</a>
+    </div>
+</nav>
+<div class="container text-center my-5">
+    <div class="row m-4">
+        <h1>View Store Orders</h1>
+    </div>
+    <form action="/droneTechStoreOrder", method="POST">
+        <div class="d-flex justify-content-center align-items-center">
+            <div class="mx-3">Dates</div>
+            <div class="mx-2">
+                <label for='startDate' class="col-form-label visually-hidden">Start Date</label>
+                <input name="startDate" id="startDate" class="form-control" type="date">
+            </div>
+            <div>-</div>
+            <div class="mx-2">
+                <label for='endDate' class="col-form-label visually-hidden">End Date</label>
+                <input name="endDate" id="endDate" class="form-control" type="date">
+            </div>
+            <div class="mx-2">
+                <a href="{{ url_for('dronetech_view_store_order') }}" type="button" class="btn btn-secondary btn-block me-2">Reset</a>
+                <button type="submit" class="btn btn-primary btn-block">Filter</button>
+            </div>
+        </div>
+    </form>
+
+    <form action="/droneTechViewOrderDetial" method="POST">
+        <table class="table table-primary table-striped ms-5 mt-4">
+            <thead>
+                <tr>
+                    <th scope="col">Order ID
+                        <button type="button" class="btn" onclick="sortByID()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5zm-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5z"/>
+                            </svg>
+                        </button>
+                    </th>
+                    <th scope="col">Operator
+                        <button type="button" class="btn" disabled>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-square" viewBox="0 0 16 16">
+                                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                                <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm12 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1v-1c0-1-1-4-6-4s-6 3-6 4v1a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12z"/>
+                            </svg>
+                        </button>
+                    </th>
+                    <th scope="col">Date
+                        <button type="button" class="btn" onclick="sortByDate()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5zm-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5z"/>
+                            </svg>
+                        </button>
+                    </th>
+                    <th scope="col">Drone ID
+                        <button type="button" class="btn" onclick="sortByDrone()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5zm-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5z"/>
+                            </svg>
+                        </button>
+                    </th>
+                    <th scope="col">Status
+                        <button type="button" class="btn" onclick="sortByStatus()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5zm-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5z"/>
+                            </svg>
+                        </button>
+                    </th>
+                    <th scope="col">Total ($)
+                        <button type="button" class="btn" onclick="sortByTotal()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5zm-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5z"/>
+                            </svg>
+                        </button>
+                    </th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody name="tableBody">
+                    {% for order in orders %}
+                    <tr>
+                        <td>{{ order[0] }}</td>
+                        <td>{{ order[1] }}</td>
+                        <td>{{ order[2] }}</td>
+                        <td>{{ order[3] }}</td>
+                        <td>{{ order[4] }}</td>
+                        <td>{{ order[5] }}</td>
+                        <td>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="selectedOrder" value='{{ order[0] }}'>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+            </tbody>
+        </table>
+        <div class='d-flex justify-content-evenly mt-5'>
+            <a href="{{ url_for('dronetech') }}" type="button" class="btn btn-primary btn-block btn-lg">Back</a>
+            <button type="submit" class="btn btn-primary btn-block btn-lg">View Order Details</button>
+        </div>
+    </form> 
+</div>
+<script>
+    var states=[0,0,0,0,0];
+    var data=eval(JSON.parse('{{ states | tojson }}'));
+    function sortByID() {
+        var orders;
+        if (states[0]==0) {
+            orders=data[0];
+            states[0]=1;
+        } else {
+            orders=data[1];
+            states[0]=0;
+        }
+        clearTable();
+        var tBody=document.querySelector("tbody[name='tableBody']");
+        for (var i=0;i<orders.length;i++) {
+            tBody.appendChild(createRow(orders[i]));
+        }
+    }
+    function sortByDate() {
+        var orders;
+        if (states[1]==0) {
+            orders=data[2];
+            states[1]=1;
+        } else {
+            orders=data[3];
+            states[1]=0;
+        }
+        clearTable();
+        var tBody=document.querySelector("tbody[name='tableBody']");
+        for (var i=0;i<orders.length;i++) {
+            tBody.appendChild(createRow(orders[i]));
+        }
+    }
+    function sortByDrone() {
+        var orders;
+        if (states[2]==0) {
+            orders=data[4];
+            states[2]=1;
+        } else {
+            orders=data[5];
+            states[2]=0;
+        }
+        clearTable();
+        var tBody=document.querySelector("tbody[name='tableBody']");
+        for (var i=0;i<orders.length;i++) {
+            tBody.appendChild(createRow(orders[i]));
+        }
+    }
+    function sortByStatus() {
+        var orders;
+        if (states[3]==0) {
+            orders=data[6];
+            states[3]=1;
+        } else {
+            orders=data[7];
+            states[3]=0;
+        }
+        clearTable();
+        var tBody=document.querySelector("tbody[name='tableBody']");
+        for (var i=0;i<orders.length;i++) {
+            tBody.appendChild(createRow(orders[i]));
+        }
+    }
+    function sortByTotal() {
+        var orders;
+        if (states[4]==0) {
+            orders=data[8];
+            states[4]=1;
+        } else {
+            orders=data[9];
+            states[4]=0;
+        }
+        clearTable();
+        var tBody=document.querySelector("tbody[name='tableBody']");
+        for (var i=0;i<orders.length;i++) {
+            tBody.appendChild(createRow(orders[i]));
+        }
+    }
+    function clearTable() {
+        var tBody=document.querySelector("tbody[name='tableBody']");
+        while (tBody.firstChild) {
+            tBody.removeChild(tBody.firstChild);
+        }
+    }
+    function createRow(order) {
+        var row=document.createElement('tr');
+        for (var i=0;i<order.length;i++) {
+            row.appendChild(createCell(order[i]));
+        }
+        row.appendChild(createRadioCell(order[0]));
+        return row;
+    }
+    function createCell(data) {
+        var cell=document.createElement("td");
+        cell.textContent=data;
+        return cell;
+    }
+    function createRadioCell(data) {
+        var input=document.createElement('input');
+        input.className="form-check-input";
+        input.type="radio";
+        input.name="selectedOrder";
+        input.value=data;
+        var divTag=document.createElement("div");
+        divTag.appendChild(input);
+        var radioCell = document.createElement('td');
+        radioCell.appendChild(divTag);
+        return radioCell;
+    }
+</script>
+{% endblock %}

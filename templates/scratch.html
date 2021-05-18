@@ -1,0 +1,11 @@
+<nav class="navbar navbar-light bg-light">
+    <div class="container">
+      <a type="button" class="btn btn-block btn-success" href="{{ url_for('logout') }}">Logout</a>
+    </div>
+</nav>
+
+{% if message %}
+  <div class="alert alert-danger text-center mb-5" role="alert">
+      {{ message }}
+    </div>
+  {% endif %}

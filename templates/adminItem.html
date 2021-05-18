@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/admin.css') }}">
+<title>Admin Item</title>
+{% endblock %}
+
+{% block body %}
+<nav class="navbar navbar-light bg-light">
+    <div class="container">
+      <a type="button" class="btn btn-block btn-success" href="{{ url_for('logout') }}">Logout</a>
+    </div>
+</nav>
+<div class="container">
+    <div class="row m-5 text-center">
+        <h1>Admin Create Item</h1>
+    </div>
+    {% if message %}
+    <div class="alert alert-danger text-center mb-5" role="alert">
+      {{ message }}
+    </div>
+    {% endif %}
+    <form action="/adminItem" method="POST">
+        <div class="row m-3">
+            <div class="col-md-3"></div>
+            <label for="name" class="col-sm-2 col-form-label">Name</label>
+            <div class="col-sm-4">
+                <input type='text' id="name" name="name" class="form-control" required autofocus>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+        <div class="row m-3">
+            <div class="col-md-3"></div>
+            <label for="type" class="col-sm-2 col-form-label">Type</label>
+            <div class="col-sm-4">
+                <select id="type" name="type" class="form-select" required>
+                    <option value="empty">Please Select</option>
+                    <option value="Dairy">Dairy</option>
+                    <option value="Bakery">Bakery</option>
+                    <option value="Meat">Meat</option>
+                    <option value="Produce">Produce</option>
+                    <option value="Personal Care">Personal Care</option>
+                    <option value="Paper Goods">Paper Goods</option>
+                    <option value="Beverages">Beverages</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+        <div class="row m-3">
+            <div class="col-md-3"></div>
+            <label for="organic" class="col-sm-2 col-form-label">Organic</label>
+            <div class="col-sm-4">
+                <select id="organic" name="organic" class="form-select">
+                    <option value="empty">Please Select</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+        <div class="row m-3">
+            <div class="col-md-3"></div>
+            <label for="origin" class="col-sm-2 col-form-label">Origin</label>
+            <div class="col-sm-4">
+                <input type='text' id="origin" name="origin" class="form-control" required>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+        <div class="m-5 d-flex justify-content-evenly">
+            <a href="{{ url_for('admin') }}" type="button" class="btn btn-lg btn-secondary button">Back</a>
+            <button type="submit" class="btn btn-lg btn-primary button">Create</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

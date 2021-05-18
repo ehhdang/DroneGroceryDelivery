@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/customer.css') }}">
+<title>Review Order</title>
+{% endblock %}
+
+{% block body %}
+<nav class="navbar navbar-light bg-light">
+    <div class="container">
+      <a type="button" class="btn btn-block btn-success" href="{{ url_for('logout') }}">Logout</a>
+    </div>
+</nav>
+
+<div class="container m-5 text-center">
+    <di class="row m-3">
+        <h1>Customer Review Order</h1>
+    </di>
+    <form action="/customerOrder/{{chain}}/{{store}}" method="POST" id="filter" class="mt-4">
+        <div class="row m-4">
+            <div class="col-sm-2"></div>
+            <label for="chain" class="col-sm-1 col-form-label">Chain</label>
+            <div class="col-sm-3">
+                <input name="chain" id="chain" type="text" disabled class="form-control" value='{{ chain }}'>
+            </div>
+            <label for="store" class="col-sm-1 col-form-label">Store</label>
+            <div class="col-sm-3">
+                <input name="store" id="store" type="text" disabled class="form-control" value='{{ store }}'>
+            </div>
+            <div class="col-sm-2"></div>
+        </div>
+       <table class="table table-primary table-striped ms-5 mt-4">
+           <thead>
+               <tr>
+                   <th scope="col">Items</th>
+                   <th scope="col">Quantity</th>
+                   <th scope="col">Unit Cost</th>
+               </tr>
+           </thead>
+           <tbody name="tableBody">
+               {% for item in items %}
+               <tr>
+                   <td>{{ item[0] }}</td>
+                   <td>
+                       <select name="{{ item[0] }}" class="form-select" onchange="updateTotal()">
+                            <option value="{{ item[1] }}">{{ item[1] }}</option>
+                            {% for i in range(limits[item[0]]+1) %}
+                                {% if i != item[1] %}
+                                <option value='{{ i }}'>{{ i }}</option>
+                                {% endif %}
+                            {% endfor %}
+                       </select>
+                    </td>
+                   <td name="unitCost">{{ item[2] }}</td>
+               </tr>
+               {% endfor %}
+           </tbody>
+       </table>
+       <div class="d-flex justify-content-end" name="total">
+           Total: {{ total }}
+       </div>
+        <div class="m-3 d-flex justify-content-evenly">
+            <a href="{{ url_for('customer') }}" type='button' class="btn btn-lg btn-secondary">Back</a>
+            <a href="{{ url_for('customer_cancel_order') }}" type="button" class="btn btn-lg btn-danger">Cancel Order</a>
+            <button type="submit" class="btn btn-lg btn-primary">Place Order</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    function updateTotal() {
+        var total=0;
+        var tBody=document.querySelector("tbody[name='tableBody']");
+        for (let i=0; i<tBody.rows.length;i++) {
+            var unitCost= tBody.rows[i].querySelector('td[name="unitCost"]').textContent;
+            var nUnits=tBody.rows[i].querySelector('select').value;
+            total+=unitCost*nUnits;
+        }
+        var totalDisplay=document.querySelector("div[name='total']");
+        total=total.toFixed(2);
+        totalDisplay.textContent="Total: "+total;
+   }
+</script>
+{% endblock %}
