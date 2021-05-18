@@ -49,15 +49,15 @@ pip install flask-mysqldb
 
 ## Run App
 #### Initalize the database
-Open MySQL Workbench. Navigate to the project folder DroneDeliveryApp/db and open
+1. Open MySQL Workbench. Navigate to the project folder DroneDeliveryApp/db and open
 the grocery_drone_delivery.sql and phase4_shell.sql
 
-In the grocery_drone_delivery.sql script, hit the lightning bolt button to execute the script
+2. In the grocery_drone_delivery.sql script, hit the lightning bolt button to execute the script
 and initialize the database
 
-In the phase4_shell.sql, hit the lightning bolt button to create all the procedures for the application
+3. In the phase4_shell.sql, hit the lightning bolt button to create all the procedures for the application
 
-Open a new script and execute the following command to hash all the users' passwords
+4. Open a new script and execute the following command to hash all the users' passwords
 ```
 call hash_passwords;
 ```
