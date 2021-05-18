@@ -31,7 +31,7 @@ Download and install MySQL from https://dev.mysql.com/downloads/
 ##### MySQL Workbench
 Download and install MySQL Workbench from https://www.mysql.com/products/workbench/ 
 
-##### Python 3.6+ and PIP
+##### Python 3.8 and PIP
 Download and install Python from https://www.python.org/
 
 #### Flask
@@ -66,7 +66,7 @@ call hash_passwords;
 In your terminal, navigate to the project folder,
 then execute the command above to launch the web ap
 ```
-python app.py
+python3 app.py
 ```
 Go to http://127.0.0.1:5000/ in your browser
 to see the app in action.
